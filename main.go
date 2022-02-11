@@ -1,19 +1,17 @@
 package main
 
 import (
-	"github.com/blog-in-your-email/data"
-	"github.com/blog-in-your-email/feed"
+	"github.com/hamza72x/blog-in-your-email/data"
+	"github.com/hamza72x/blog-in-your-email/db"
+	"github.com/hamza72x/blog-in-your-email/feed"
 )
 
 func main() {
-	// mail.Send("hamza@gtaf.org", "Hello World!")
+
 	blogs := data.GetBlogDataFromCSV()
-	for _, blog := range blogs {
-		feed.GetFeed(blog)
+	isFirstRun := db.IsFirstRun()
+
+	for i := range blogs {
+		feed.CheckBlogFeed(blogs[i], isFirstRun)
 	}
-}
-
-func makeFormattedMailMessage() {
-	// Formatted message.
-
 }

@@ -1,8 +1,8 @@
 # Send all of your blog posts to your email
 
 ```
-    1. Create `data.csv` file in project directory (Check demo demo.data.csv file for format)
-    2. Set environment variable `BLOG_IN_EMAIL` (currently only GMail is supported)
-    3. Set environment variable `BLOG_IN_PASSWORD` (if you a have 2FA enabled, then use the app password)
-    4. Set cron job to run the script
+    1. go install -v github.com/hamza72x/blog-in-your-email@latest
+    2. Create a csv file in `$HOME/.config/blog_in_email_data.csv` (Check demo.data.csv file for format)
+    3. Create a config file in `$HOME/.config/blog_in_email_config.ini` (Check demo.config.ini file for format)
+    4. Set cron job to run the cli (blog-in-your-email)
 ```

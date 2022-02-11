@@ -5,22 +5,20 @@ import (
 	"log"
 	"os"
 	"strings"
+
+	"github.com/hamza72x/blog-in-your-email/helper"
+	"github.com/hamza72x/blog-in-your-email/model"
 )
 
-type Blog struct {
-	Title string
-	Link  string
-}
+func GetBlogDataFromCSV() []model.Blog {
 
-func GetBlogDataFromCSV() []Blog {
-
-	lines, err := readCsv("data.csv")
+	lines, err := readCsv(helper.GetDataFile())
 
 	if err != nil {
 		panic(err)
 	}
 
-	var data []Blog
+	var data []model.Blog
 
 	// skipping FIRST line which is the header/titles of the columns
 	for _, line := range lines[1:] {
@@ -33,7 +31,7 @@ func GetBlogDataFromCSV() []Blog {
 			continue
 		}
 
-		data = append(data, Blog{Title: title, Link: link})
+		data = append(data, model.Blog{Title: title, Link: link})
 	}
 
 	return data

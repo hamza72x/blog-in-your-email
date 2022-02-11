@@ -4,36 +4,34 @@ import (
 	"fmt"
 	"log"
 	"net/smtp"
-	"os"
+
+	"github.com/hamza72x/blog-in-your-email/helper"
 )
 
-func Send(email, message string) {
+func Send(message string) {
 
-	// Sender data.
-	from := os.Getenv("BLOG_IN_EMAIL")
-	password := os.Getenv("BLOG_IN_PASSWORD")
+	ini := helper.GetIni()
+
+	from := ini.SENDER_EMAIL
+	password := ini.SENDER_PASSWORD
 
 	if len(from) == 0 {
-		log.Printf("BLOG_IN_EMAIL is not set")
+		log.Printf("SENDER_EMAIl is not set")
 		return
 	}
 
 	if len(password) == 0 {
-		log.Printf("BLOG_IN_PASSWORD is not set")
+		log.Printf("SENDER_PASSWORD is not set")
 		return
 	}
 
-	// Receiver email address.
-	to := []string{email}
+	to := []string{ini.RECEIVER_EMAIL}
 
-	// smtp server configuration.
 	smtpHost := "smtp.gmail.com"
 	smtpPort := "587"
 
-	// Authentication.
 	auth := smtp.PlainAuth("", from, password, smtpHost)
 
-	// Sending email.
 	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, []byte(message))
 
 	if err != nil {
