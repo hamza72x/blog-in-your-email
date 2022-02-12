@@ -13,6 +13,7 @@ type INI struct {
 
 type Post struct {
 	ID          uint   `gorm:"primary_key"`
+	BlogTitle   string `gorm:"column:blog_title"`
 	Link        string `gorm:"column:link"`
 	IsEmailSent bool   `gorm:"column:is_email_sent"`
 }

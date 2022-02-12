@@ -11,24 +11,24 @@ import (
 	"github.com/mmcdole/gofeed"
 )
 
-func CheckBlogFeed(blog model.Blog, isFirstRun bool) {
+func CheckBlogFeed(blog model.Blog) {
 
 	log.Println("Fetching feed for: "+blog.Title, blog.Link)
 
-	newPosts := getNewPosts(blog, isFirstRun)
+	newPosts, feedTitle := getNewPosts(blog)
 
 	fmt.Printf("New posts of %s: %d\n", blog.Title, len(newPosts))
 
 	for _, item := range newPosts {
 		fmt.Printf("Sending email for %s, from %s\n", blog.Title, item.Author.Name)
-		mail.Send(item.Content)
+		mail.Send(&item, feedTitle)
 		time.Sleep(time.Second * 5)
 	}
 }
 
-func getNewPosts(blog model.Blog, isFirstRun bool) []gofeed.Item {
+func getNewPosts(blog model.Blog) (newPosts []gofeed.Item, feedTitle string) {
 
-	var newPosts []gofeed.Item
+	var isFirstRun = db.IsFirstRun(blog.Title)
 
 	fp := gofeed.NewParser()
 
@@ -36,14 +36,10 @@ func getNewPosts(blog model.Blog, isFirstRun bool) []gofeed.Item {
 
 	if err != nil {
 		log.Println("Error parsing feed:", err)
-		return []gofeed.Item{}
+		return []gofeed.Item{}, ""
 	}
 
-	for i, item := range feed.Items {
-
-		if i == 0 {
-			newPosts = append(newPosts, *item)
-		}
+	for _, item := range feed.Items {
 
 		var post model.Post
 
@@ -59,5 +55,5 @@ func getNewPosts(blog model.Blog, isFirstRun bool) []gofeed.Item {
 		}
 	}
 
-	return newPosts
+	return newPosts, feed.Title
 }

@@ -1,43 +1,71 @@
 package mail
 
 import (
+	"crypto/tls"
 	"fmt"
 	"log"
-	"net/smtp"
+	"time"
 
 	"github.com/hamza72x/blog-in-your-email/helper"
+	"github.com/hamza72x/blog-in-your-email/tmpl"
+	"github.com/mmcdole/gofeed"
+	mail "github.com/xhit/go-simple-mail/v2"
 )
 
-func Send(message string) {
+func Send(item *gofeed.Item, feedTitle string) {
 
 	ini := helper.GetIni()
 
-	from := ini.SENDER_EMAIL
-	password := ini.SENDER_PASSWORD
+	server := mail.NewSMTPClient()
 
-	if len(from) == 0 {
-		log.Printf("SENDER_EMAIl is not set")
-		return
-	}
+	// SMTP Server
+	server.Host = "smtp.gmail.com"
+	server.Port = 587
+	server.Username = ini.SENDER_EMAIL
+	server.Password = ini.SENDER_PASSWORD
+	server.Encryption = mail.EncryptionSTARTTLS
 
-	if len(password) == 0 {
-		log.Printf("SENDER_PASSWORD is not set")
-		return
-	}
+	// Variable to keep alive connection
+	server.KeepAlive = false
 
-	to := []string{ini.RECEIVER_EMAIL}
+	// Timeout for connect to SMTP Server
+	server.ConnectTimeout = 10 * time.Second
 
-	smtpHost := "smtp.gmail.com"
-	smtpPort := "587"
+	// Timeout for send the data and wait respond
+	server.SendTimeout = 10 * time.Second
 
-	auth := smtp.PlainAuth("", from, password, smtpHost)
+	// Set TLSConfig to provide custom TLS configuration. For example,
+	// to skip TLS verification (useful for testing):
+	server.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
-	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, []byte(message))
+	// SMTP client
+	smtpClient, err := server.Connect()
 
 	if err != nil {
-		fmt.Println(err)
+		log.Printf("Error connecting to SMTP server: %s", err)
 		return
 	}
 
-	fmt.Println("Email Sent Successfully!")
+	// New email simple html with inline and CC
+	email := mail.NewMSG()
+
+	email.SetFrom(fmt.Sprintf("%s <%s>", "BLOG IN YOUR EMAIL", ini.SENDER_EMAIL))
+	email.AddTo(ini.RECEIVER_EMAIL)
+	email.SetSubject(fmt.Sprintf("New article: %s", item.Title))
+	email.SetBody(mail.TextHTML, tmpl.GetHtml(item, feedTitle))
+
+	// always check error after send
+	if email.Error != nil {
+		log.Printf("Error setting data to email: %s", email.Error)
+		return
+	}
+
+	// Call Send and pass the client
+	err = email.Send(smtpClient)
+
+	if err != nil {
+		log.Println(err)
+	} else {
+		log.Println("Email Sent")
+	}
 }
