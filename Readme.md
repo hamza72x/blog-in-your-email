@@ -5,7 +5,7 @@
 $ go install -v github.com/hamza72x/blog-in-your-email@latest
 
 # clone the repo
-$ git clone github.com/hamza72x/blog-in-your-email && cd blog-in-your-email
+$ git clone https://github.com/hamza72x/blog-in-your-email && cd blog-in-your-email
 
 # make config directory
 $ mkdir -p $HOME/.config/blog-in-your-email
