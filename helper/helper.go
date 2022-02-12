@@ -22,15 +22,15 @@ func GetHomeDir() string {
 }
 
 func GetDataFile() string {
-	return path.Join(GetHomeDir(), ".config", constant.DATA_FILE)
+	return path.Join(GetHomeDir(), ".config", "blog-in-your-email", constant.DATA_FILE)
 }
 
 func GetIniFile() string {
-	return path.Join(GetHomeDir(), ".config", constant.INI_FILE)
+	return path.Join(GetHomeDir(), ".config", "blog-in-your-email", constant.INI_FILE)
 }
 
 func GetDBFile() string {
-	return path.Join(GetHomeDir(), ".config", constant.DB_FILE)
+	return path.Join(GetHomeDir(), ".config", "blog-in-your-email", constant.DB_FILE)
 }
 
 func GetIni() model.INI {
@@ -60,4 +60,8 @@ func FileExists(filename string) bool {
 		return false
 	}
 	return !info.IsDir()
+}
+
+func IsFirstRun() bool {
+	return !FileExists(GetDBFile())
 }

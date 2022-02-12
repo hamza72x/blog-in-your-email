@@ -28,7 +28,7 @@ func CheckBlogFeed(blog model.Blog) {
 
 func getNewPosts(blog model.Blog) (newPosts []gofeed.Item, feedTitle string) {
 
-	var isFirstRun = db.IsFirstRun(blog.Title)
+	var isNewBlog = db.IsNewBlog(blog.Title)
 
 	fp := gofeed.NewParser()
 
@@ -47,9 +47,9 @@ func getNewPosts(blog model.Blog) (newPosts []gofeed.Item, feedTitle string) {
 
 		if post.ID == 0 {
 
-			db.Conn().Create(&model.Post{Link: item.Link, IsEmailSent: isFirstRun})
+			db.Conn().Create(&model.Post{Link: item.Link, IsEmailSent: isNewBlog})
 
-			if !isFirstRun {
+			if !isNewBlog {
 				newPosts = append(newPosts, *item)
 			}
 		}

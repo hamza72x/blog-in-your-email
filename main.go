@@ -6,6 +6,7 @@ import (
 	"github.com/hamza72x/blog-in-your-email/data"
 	"github.com/hamza72x/blog-in-your-email/feed"
 	"github.com/hamza72x/blog-in-your-email/helper"
+	"github.com/hamza72x/blog-in-your-email/mail"
 )
 
 func main() {
@@ -13,9 +14,14 @@ func main() {
 	checkConfigs()
 
 	blogs := data.GetBlogDataFromCSV()
+	isFirstRun := helper.IsFirstRun()
 
 	for i := range blogs {
 		feed.CheckBlogFeed(blogs[i])
+	}
+
+	if isFirstRun {
+		mail.SendWelcomeEmail()
 	}
 }
 

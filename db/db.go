@@ -26,7 +26,7 @@ func Conn() *gorm.DB {
 	return conn
 }
 
-func IsFirstRun(blogTitle string) bool {
+func IsNewBlog(blogTitle string) bool {
 	var count int64
 	Conn().Table("posts").Where("blog_title = ?", blogTitle).Count(&count)
 	return count == 0

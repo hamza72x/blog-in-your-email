@@ -8,11 +8,20 @@ import (
 
 	"github.com/hamza72x/blog-in-your-email/helper"
 	"github.com/hamza72x/blog-in-your-email/tmpl"
+	hel "github.com/hamza72x/go-helper"
 	"github.com/mmcdole/gofeed"
 	mail "github.com/xhit/go-simple-mail/v2"
 )
 
 func Send(item *gofeed.Item, feedTitle string) {
+	send(fmt.Sprintf("New Article: %s", item.Title), tmpl.GetHtml(item, feedTitle))
+}
+
+func SendWelcomeEmail() {
+	send("Welcome to BLOG IN YOUR EMAIL", hel.FileStrMust("tmpl/welcome.html"))
+}
+
+func send(subject, body string) {
 
 	ini := helper.GetIni()
 
@@ -51,8 +60,8 @@ func Send(item *gofeed.Item, feedTitle string) {
 
 	email.SetFrom(fmt.Sprintf("%s <%s>", "BLOG IN YOUR EMAIL", ini.SENDER_EMAIL))
 	email.AddTo(ini.RECEIVER_EMAIL)
-	email.SetSubject(fmt.Sprintf("New article: %s", item.Title))
-	email.SetBody(mail.TextHTML, tmpl.GetHtml(item, feedTitle))
+	email.SetSubject(subject)
+	email.SetBody(mail.TextHTML, body)
 
 	// always check error after send
 	if email.Error != nil {
@@ -66,6 +75,6 @@ func Send(item *gofeed.Item, feedTitle string) {
 	if err != nil {
 		log.Println(err)
 	} else {
-		log.Println("Email Sent")
+		log.Println(fmt.Sprintf("Email sent %s", subject))
 	}
 }
