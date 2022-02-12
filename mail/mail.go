@@ -8,7 +8,6 @@ import (
 
 	"github.com/hamza72x/blog-in-your-email/helper"
 	"github.com/hamza72x/blog-in-your-email/tmpl"
-	hel "github.com/hamza72x/go-helper"
 	"github.com/mmcdole/gofeed"
 	mail "github.com/xhit/go-simple-mail/v2"
 )
@@ -18,7 +17,7 @@ func Send(item *gofeed.Item, feedTitle string) {
 }
 
 func SendWelcomeEmail() {
-	send("Welcome to BLOG IN YOUR EMAIL", hel.FileStrMust("tmpl/welcome.html"))
+	send("Welcome to BLOG IN YOUR EMAIL", tmpl.WELCOME_HTML)
 }
 
 func send(subject, body string) {
