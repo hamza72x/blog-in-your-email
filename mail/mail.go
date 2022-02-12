@@ -19,8 +19,8 @@ func Send(item *gofeed.Item, feedTitle string) {
 	server := mail.NewSMTPClient()
 
 	// SMTP Server
-	server.Host = "smtp.gmail.com"
-	server.Port = 587
+	server.Host = ini.SMTP_SERVER
+	server.Port = ini.SMTP_PORT
 	server.Username = ini.SENDER_EMAIL
 	server.Password = ini.SENDER_PASSWORD
 	server.Encryption = mail.EncryptionSTARTTLS

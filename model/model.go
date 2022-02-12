@@ -9,6 +9,8 @@ type INI struct {
 	SENDER_EMAIL    string
 	SENDER_PASSWORD string
 	RECEIVER_EMAIL  string
+	SMTP_SERVER     string
+	SMTP_PORT       int
 }
 
 type Post struct {
