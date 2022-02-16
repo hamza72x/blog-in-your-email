@@ -16,5 +16,5 @@ $ cp config.sample.ini $HOME/.config/blog-in-your-email/config.ini # make your n
 
 # Set cron job to run the cli (blog-in-your-email)
 # Crontab example for every day at 4:00 AM
-# 0 4 * * * blog-in-your-email
+# 0 4 * * * /home/nix/go-xc/bin/blog-in-your-email > /home/nix/blog-in-your-email.log 2>&1
 ```
