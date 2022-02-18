@@ -43,11 +43,11 @@ func getNewPosts(blog model.Blog) (newPosts []gofeed.Item, feedTitle string) {
 
 		var post model.Post
 
-		db.Conn().Where("link = ?", item.Link).First(&post)
+		db.Conn().Where("link = ? AND blog_title = ?", item.Link, blog.Title).First(&post)
 
 		if post.ID == 0 {
 
-			db.Conn().Create(&model.Post{Link: item.Link, IsEmailSent: isNewBlog})
+			db.Conn().Create(&model.Post{Link: item.Link, IsEmailSent: isNewBlog, BlogTitle: blog.Title})
 
 			if !isNewBlog {
 				newPosts = append(newPosts, *item)
