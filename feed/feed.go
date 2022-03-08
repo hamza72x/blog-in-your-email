@@ -21,7 +21,7 @@ func CheckBlogFeed(blog model.Blog) {
 
 	for _, item := range newPosts {
 		fmt.Printf("Sending email for %s, from %s\n", blog.Title, item.Author.Name)
-		mail.Send(&item, feedTitle)
+		mail.Send(&item, blog, feedTitle)
 		time.Sleep(time.Second * 5)
 	}
 }

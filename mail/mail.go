@@ -7,20 +7,21 @@ import (
 	"time"
 
 	"github.com/hamza72x/blog-in-your-email/helper"
+	"github.com/hamza72x/blog-in-your-email/model"
 	"github.com/hamza72x/blog-in-your-email/tmpl"
 	"github.com/mmcdole/gofeed"
 	mail "github.com/xhit/go-simple-mail/v2"
 )
 
-func Send(item *gofeed.Item, feedTitle string) {
-	send(fmt.Sprintf("New Article: %s", item.Title), tmpl.GetHtml(item, feedTitle))
+func Send(item *gofeed.Item, blog model.Blog, feedTitle string) {
+	send(blog.Title, fmt.Sprintf("New Article: %s", item.Title), tmpl.GetHtml(item, feedTitle))
 }
 
 func SendWelcomeEmail() {
-	send("Welcome to BLOG IN YOUR EMAIL", tmpl.WELCOME_HTML)
+	send("CONFIRMATION", "Welcome to BLOG IN YOUR EMAIL", tmpl.WELCOME_HTML)
 }
 
-func send(subject, body string) {
+func send(senderName, subject, body string) {
 
 	ini := helper.GetIni()
 
@@ -57,7 +58,7 @@ func send(subject, body string) {
 	// New email simple html with inline and CC
 	email := mail.NewMSG()
 
-	email.SetFrom(fmt.Sprintf("%s <%s>", "BLOG IN YOUR EMAIL", ini.SENDER_EMAIL))
+	email.SetFrom(fmt.Sprintf("%s - %s <%s>", senderName, "BLOG IN YOUR EMAIL", ini.SENDER_EMAIL))
 	email.AddTo(ini.RECEIVER_EMAIL)
 	email.SetSubject(subject)
 	email.SetBody(mail.TextHTML, body)
