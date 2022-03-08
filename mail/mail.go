@@ -58,7 +58,7 @@ func send(senderName, subject, body string) {
 	// New email simple html with inline and CC
 	email := mail.NewMSG()
 
-	email.SetFrom(fmt.Sprintf("%s - %s <%s>", senderName, "BLOG IN YOUR EMAIL", ini.SENDER_EMAIL))
+	email.SetFrom(fmt.Sprintf("%s - %s <%s>", senderName, "BlogInYourEmail", ini.SENDER_EMAIL))
 	email.AddTo(ini.RECEIVER_EMAIL)
 	email.SetSubject(subject)
 	email.SetBody(mail.TextHTML, body)
